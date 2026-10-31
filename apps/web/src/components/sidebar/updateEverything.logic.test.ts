@@ -118,7 +118,6 @@ describe("collectServerUpdateTargets", () => {
         machine("manual", "0.0.40", undefined),
       ],
       "0.0.50",
-      true,
     );
 
     expect(targets.map((target) => [target.serverLabel, target.targetVersion])).toEqual([
@@ -170,7 +169,6 @@ describe("collectServerUpdateTargets", () => {
     const { targets, skipped } = collectServerUpdateTargets(
       [secondary("wsl"), ...(owner ? [owner] : [])],
       "0.0.50",
-      true,
     );
     expect(targets.some((target) => target.environmentId === "wsl")).toBe(false);
     expect(skipped.find((entry) => entry.environmentId === "wsl")).toEqual(
@@ -180,23 +178,7 @@ describe("collectServerUpdateTargets", () => {
     );
   });
 
-  it("waits for npm only for hosts that install from it or when the release may lack archives", () => {
-    const hosts = [
-      machine("archive-service", "0.0.41-nightly.20260914.1700", "boot-service"),
-      machine("npm-service", "0.0.41-nightly.20260914.1699", "boot-service"),
-      machine("legacy-respawn", "0.1.4-nightly.20261027.3796", "respawn"),
-      machine("desktop", "0.1.4-nightly.20261027.3796", "desktop-managed"),
-    ];
-    const waits = (releaseArchivesPublished: boolean) =>
-      collectServerUpdateTargets(
-        hosts,
-        "0.1.5-nightly.20261029.3873",
-        releaseArchivesPublished,
-      ).waitForNpm.map((target) => target.serverLabel);
 
-    expect(waits(true)).toEqual(["npm-service", "legacy-respawn"]);
-    expect(waits(false)).toEqual(["archive-service", "npm-service", "legacy-respawn"]);
-  });
 });
 
 describe("collectChannelSwitchTargets", () => {
