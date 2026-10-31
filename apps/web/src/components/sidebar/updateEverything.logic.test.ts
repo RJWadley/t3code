@@ -177,8 +177,6 @@ describe("collectServerUpdateTargets", () => {
         : { environmentId: "wsl", label: "wsl", reason: "update its owning desktop app" },
     );
   });
-
-
 });
 
 describe("collectChannelSwitchTargets", () => {
